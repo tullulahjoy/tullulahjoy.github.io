@@ -225,8 +225,7 @@ test('populated page dimensions match the connected prototype with equivalent sc
       expect(actualStyles[i].height).toBeLessThanOrEqual(referenceStyles[i].height + lineHeight + 2)
     } else expect(Math.abs(actualStyles[i].height - referenceStyles[i].height)).toBeLessThanOrEqual(2)
   }
-  // The approved Aubergine theme supersedes the prototype's editing colour.
-  expect(actualStyles[0].background).toBe('rgb(237, 245, 245)')
+  expect(actualStyles[0].background).toBe(referenceStyles[0].background)
   await expect(page.locator('.pipeline-introduction')).toHaveCount(0)
   await expect(page.getByText(/connected prototype|Reset demo|fictional editor/)).toHaveCount(0)
   await page.screenshot({ path: testInfo.outputPath('react-populated.png'), fullPage: true })

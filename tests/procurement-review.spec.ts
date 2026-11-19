@@ -72,7 +72,7 @@ for (const width of [320, 1440]) {
     await expect(footer.getByRole('button', { name: 'Add procurement to pipeline plan', exact: true })).toBeEnabled()
     await expect(footer.getByRole('button', { name: 'Update preview', exact: true })).not.toHaveClass(/primary/)
     expect(await footer.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(await review.locator('.review-stage-heading').evaluate(el => getComputedStyle(el).backgroundColor))
-    expect(await review.locator('.review-stage-heading').evaluate(el => getComputedStyle(el).backgroundColor)).toBe('rgb(220, 235, 236)')
+    expect(await review.locator('.review-stage-heading').evaluate(el => getComputedStyle(el).backgroundColor)).toBe('rgb(220, 231, 243)')
     expect(await review.locator('.review-card').evaluate(el => getComputedStyle(el).borderTopWidth)).toBe('4px')
     await disclosure.locator('summary').click()
     await expect(disclosure.locator('table')).toBeHidden()

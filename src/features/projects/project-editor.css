@@ -34,7 +34,7 @@
 .movement-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 16px; margin-bottom: 20px; border: 1px solid var(--primary-border); border-radius: 6px; background: var(--primary-soft); }
 .movement-summary p { margin: 0; }
 .schedule-review { padding: 20px 22px; border-top: 1px solid var(--border); }
-.project-page .review-card { padding: 0; margin-bottom: 0; border-color: var(--review-border); border-top: 4px solid var(--editing); border-bottom: 0; border-radius: 9px 9px 0 0; }
+.project-page .review-card { padding: 0; margin-bottom: 0; border-color: var(--review-border); border-top: 4px solid var(--review-accent); border-bottom: 0; border-radius: 9px 9px 0 0; }
 .review-card > .editor-card-heading { padding: 20px 22px; background: var(--review-surface); border-bottom: 1px solid var(--review-border); border-radius: 8px 8px 0 0; }
 .review-stage-content { padding: 22px; }
 .review-stage-content h3 { margin: 0 0 16px; font-size: 16px; }
@@ -59,7 +59,7 @@
 .duration-comparison { display: block; }
 .christmas-duration-note { display: block; max-width: 30ch; margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .review-card .planning-findings { margin-bottom: 20px; }
-.procurement-confirm-dialog .critical-explanation { padding: 16px; margin: 20px 0; border: 1px solid #edb1bc; border-radius: 6px; background: #fff3f5; }
+.procurement-confirm-dialog .critical-explanation { padding: 16px; margin: 20px 0; border: 1px solid var(--critical-confirm-border); border-radius: 6px; background: var(--critical-subtle-surface); }
 .procurement-confirm-dialog .critical-explanation h3 { margin: 0; }
 .procurement-confirm-dialog .critical-explanation p { margin: 10px 0; }
 .procurement-confirm-dialog .critical-explanation p:last-child { margin-bottom: 0; font-size: 13px; }

@@ -92,11 +92,11 @@
 .phase-rule-heading .text-button { padding: 6px 0; font-size: 12px; font-weight: 400; }
 .phase-rule-controls { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; }
 .phase-rule-controls .field { min-width: 0; }
-.phase-rule-controls .phase-rule-severity.critical { color: #a52f40; background-color: #fff0f2; border-color: #e4b7be; }
-.phase-rule-controls .phase-rule-severity.warning { color: #805400; background-color: #fff6df; border-color: #e8c36a; }
+.phase-rule-controls .phase-rule-severity.critical { color: var(--critical-text); background-color: var(--critical-surface); border-color: var(--critical-border); }
+.phase-rule-controls .phase-rule-severity.warning { color: var(--warning-strong-text); background-color: var(--warning-surface); border-color: var(--warning-control-border); }
 .phase-rule-severity option { background-color: var(--surface); }
-.phase-rule-severity option[value=warning] { color: #805400; }
-.phase-rule-severity option[value=critical] { color: #a52f40; }
+.phase-rule-severity option[value=warning] { color: var(--warning-strong-text); }
+.phase-rule-severity option[value=critical] { color: var(--critical-text); }
 .phase-rule-explanation summary { width: fit-content; color: var(--muted); font-size: 13px; cursor: pointer; padding: 5px 0; }
 .phase-rule-explanation textarea { margin-top: 6px; }
 .phase-overlap-settings .phase-add-rule { align-self: flex-start; min-height: 40px; font-size: 13px; }
@@ -107,7 +107,7 @@
 .phase-used-colours ul { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; padding: 0; margin: 0; }
 .phase-used-colours li { display: flex; align-items: center; gap: 7px; min-width: 0; overflow-wrap: anywhere; }
 .phase-used-colours .colour-swatch { flex-shrink: 0; margin: 0; }
-.phase-colour-warning { margin: 0; padding: 10px 12px; border: 1px solid #e8c36a; border-radius: 5px; background: #fff6df; color: #765000; font-size: 13px; line-height: 1.6; }
+.phase-colour-warning { margin: 0; padding: 10px 12px; border: 1px solid var(--warning-control-border); border-radius: 5px; background: var(--warning-surface); color: var(--warning-note-text); font-size: 13px; line-height: 1.6; }
 .phase-overlap-settings { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
 .phase-overlap-settings h3, .phase-overlap-settings p { margin: 0; }
 .phase-overlap-settings h3 { font-size: 18px; }

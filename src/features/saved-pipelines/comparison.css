@@ -42,8 +42,8 @@
 .comparison-findings-table { min-width: 690px; table-layout: fixed; }
 .comparison-findings-table th { width: 33.333%; }
 .comparison-findings-table th p, .comparison-findings-table td p { margin: 10px 0; font-weight: 400; }
-.comparison-findings-table .comparison-finding-cell.warning { background: #fff9ec; }
-.comparison-findings-table .comparison-finding-cell.critical { background: #fff3f5; }
+.comparison-findings-table .comparison-finding-cell.warning { background: var(--warning-subtle-surface); }
+.comparison-findings-table .comparison-finding-cell.critical { background: var(--critical-subtle-surface); }
 .comparison-finding-status { display: inline-block; }
 @media (max-width: 700px) {
   .app-dialog.comparison-modal { width: calc(100vw - 10px); height: calc(100dvh - 10px); }

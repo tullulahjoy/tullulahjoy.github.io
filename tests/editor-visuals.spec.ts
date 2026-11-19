@@ -48,7 +48,7 @@ for (const width of [390, 1440]) {
     await expect(page.getByLabel('Anchor milestone', { exact: true })).toHaveValue('7')
   })
 
-  test(`viewing, editing and live Pipeline Plan states retain layout and distinct Aubergine roles at ${width}px`, async ({ page }, testInfo) => {
+  test(`viewing, editing and live Pipeline Plan states retain layout and distinct original colour roles at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 })
     const data = await setup(page)
     const reference = await page.context().newPage()
@@ -68,10 +68,10 @@ for (const width of [390, 1440]) {
       expect({ padding: style.padding, radius: style.radius }).toEqual({ padding: referenceStyle.padding, radius: referenceStyle.radius })
       const contextLabel = await panel.locator('.context-label').evaluate(label)
       expect(contextLabel.weight).toBe((await reference.locator('.context-label').evaluate(label)).weight)
-      expect(contextLabel.color).toBe(state === 'viewing' ? 'rgb(112, 100, 120)' : state === 'editing' ? 'rgb(50, 108, 114)' : 'rgb(118, 80, 139)')
+      expect(contextLabel.color).toBe(state === 'viewing' ? 'rgb(92, 110, 133)' : state === 'editing' ? 'rgb(107, 79, 134)' : 'rgb(49, 94, 212)')
       colours.push(style.background)
       if (state === 'editing') {
-        await expect(panel.getByRole('button', { name: 'Save', exact: true })).toHaveCSS('background-color', 'rgb(50, 108, 114)')
+        await expect(panel.getByRole('button', { name: 'Save', exact: true })).toHaveCSS('background-color', 'rgb(107, 79, 134)')
         await expect(panel.getByRole('button', { name: 'Exit edit mode', exact: true })).toBeVisible()
         await expect(page.getByRole('button', { name: '+ Add procurement', exact: true })).toBeVisible()
         await expect(page.getByRole('button', { name: 'Adjust pipeline plan', exact: true })).toBeVisible()

@@ -39,7 +39,7 @@ for (const width of [390, 1440]) {
     await expect(chooser.getByText(/You can change a phase’s duration/)).toHaveCount(0)
     await expect(chooser.getByText(/^Preview the schedule after adding/)).toHaveCount(0)
     const create = chooser.getByRole('button', { name: '+ Create “Bid Writing”', exact: true })
-    expect(await create.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(118, 80, 139)')
+    expect(await create.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(49, 94, 212)')
     expect(await chooser.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
     await page.screenshot({ path: testInfo.outputPath('no-results.png') })
     await create.click()

@@ -57,8 +57,8 @@
 .finding-participants li + li { margin-top: 5px; }
 .finding-participants a { font-weight: 700; }
 .finding-participants small { display: block; color: var(--muted); font-size: 12px; line-height: 1.5; }
-.finding-overlap { margin-top: auto; padding-top: 11px; border-top: 1px solid #e4c88b; }
-.critical .finding-overlap { border-top-color: #e4b7be; }
+.finding-overlap { margin-top: auto; padding-top: 11px; border-top: 1px solid var(--warning-border); }
+.critical .finding-overlap { border-top-color: var(--critical-border); }
 .finding-overlap p { margin: 0; }
 .finding-overlap .finding-duration { margin-top: 4px; color: var(--muted); font-size: 12px; }
 .procurement-overview { margin-top: 22px; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; }
