@@ -28,7 +28,11 @@ function Frame({ children, workspace, pipelinePath, workspaceControl }: { childr
   }, [pathname, title])
 
   return <>
-    <a className="skip-link" href="#main-content">Skip to content</a>
+    <a className="skip-link" href="#main-content" onClick={event => {
+      event.preventDefault()
+      main.current?.focus()
+      main.current?.scrollIntoView({ block: 'start' })
+    }}>Skip to content</a>
     <header className="app-header">
       <Link className="app-brand" to={pipelinePath ?? '/workspaces'}><span>LTPP</span><span className="app-brand-description">Long-term pipeline planner</span></Link>
       <nav className="app-nav" aria-label="Main navigation">

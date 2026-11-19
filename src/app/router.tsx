@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from 'react-router'
+import { createBrowserRouter, createHashRouter, redirect } from 'react-router'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { localData, LocalDataError } from '../data/local-data.ts'
 import { workspaceNameSchema } from '../data/schemas.ts'
@@ -26,7 +26,10 @@ async function createWorkspace({ request }: ActionFunctionArgs): Promise<Workspa
   }
 }
 
-export const router = createBrowserRouter([{
+// GitHub Pages cannot serve application paths directly. Other hosts keep clean URLs.
+const createRouter = import.meta.env.VITE_ROUTER_MODE === 'hash' ? createHashRouter : createBrowserRouter
+
+export const router = createRouter([{
   id: 'app',
   path: '/',
   Component: Layout,

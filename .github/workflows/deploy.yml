@@ -36,6 +36,8 @@ jobs:
         run: npm ci
 
       - name: Build production site
+        env:
+          VITE_ROUTER_MODE: hash
         run: npm run build
 
       - name: Configure GitHub Pages
