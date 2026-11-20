@@ -104,7 +104,7 @@ export function Workspaces() {
             onClick={() => { setDeleting(workspace); setDeleteError('') }}>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6" /></svg>
           </button>
-        </li>)}</ul><p id="workspace-reorder-help" className="sr-only">Drag a grip to reorder workspaces. With the keyboard, press Space or Enter to pick up, use Up or Down, Home or End to choose a position, then Space or Enter to drop. Escape cancels.</p></div> : <p>A workspace holds one team’s plans. Create separate workspaces for different teams.</p>}
+        </li>)}</ul><p id="workspace-reorder-help" className="sr-only">Drag a grip to reorder workspaces. With the keyboard, press Space or Enter to pick up, use Up or Down, Home or End to choose a position, then Space or Enter to drop. Escape cancels.</p></div> : <p>Each workspace has its own procurement pipeline. Keep alternative plans for that pipeline together in the same workspace.</p>}
       </section>
       <section className="create-workspace" aria-labelledby="create-heading">
         <h2 id="create-heading">Create a workspace</h2>
