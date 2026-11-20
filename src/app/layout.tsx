@@ -18,7 +18,7 @@ function Frame({ children, workspace, pipelinePath, workspaceControl }: { childr
   const main = useRef<HTMLElement>(null)
   const previousPath = useRef(pathname)
   const section = Object.entries(sections).find(([path]) => pathname.split('/').includes(path))?.[1]
-  const title = `${section ?? 'Workspaces'} · LTPP`
+  const title = `${pathname === '/discover' ? 'Discover LTPP' : section ?? 'Workspaces'} · LTPP`
 
   useEffect(() => {
     document.title = title
@@ -41,6 +41,7 @@ function Frame({ children, workspace, pipelinePath, workspaceControl }: { childr
           : <Link key={path} to={`/workspaces/${workspace.id}/${path}`} aria-current={section === label ? 'page' : undefined}>{label}</Link>)}
         {workspaceControl}
         <NavLink to="/workspaces" end>Workspaces</NavLink>
+        {!workspace && <NavLink to="/discover" end>Discover LTPP</NavLink>}
       </nav>
       <span className="local-identity">Local user</span>
     </header>

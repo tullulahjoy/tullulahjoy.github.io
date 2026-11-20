@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useBeforeUnload } from 'react-router'
 import { ZodError } from 'zod'
-import type { Project, SavedPipeline } from '../../data/schemas.ts'
+import type { Library, Project, SavedPipeline } from '../../data/schemas.ts'
 import { projectSchema } from '../../data/schemas.ts'
 import { localData } from '../../data/local-data.ts'
 import { useWorkspace } from '../../app/workspace-context.ts'
@@ -29,6 +29,22 @@ export function AdjustmentDialog({ initial, saved, window, onWindowChange, onClo
   onClose: () => void; onApply: (plans: Project[]) => void
 }) {
   const workspace = useWorkspace()
+  async function loadLibrary() {
+    const [library, record] = await Promise.all([localData.getLibrary(workspace.id), saved ? localData.getPipeline(workspace.id, saved.id) : Promise.resolve(null)])
+    if (saved && (!record || record.revision !== saved.revision)) throw new Error('This saved pipeline plan changed in another tab. Your adjustments are still here. Close this adjustment and reopen the latest saved plan before applying changes.')
+    workspace.acceptLibrary(library)
+    return library
+  }
+  return <AdjustmentEditor initial={initial} initialLibrary={workspace.library} loadLibrary={loadLibrary} window={window} onWindowChange={onWindowChange} onClose={onClose} onApply={onApply} />
+}
+
+// The editor owns only its draft. Its caller supplies the Library and decides
+// where applied changes go, allowing the same controls to run without storage.
+export function AdjustmentEditor({ initial, initialLibrary, loadLibrary, window, onWindowChange, onClose, onApply, reviewNote = 'This applies adjustments to the open pipeline plan. Use Save in the editing window to update the named plan, or Save as to keep a separate alternative.' }: {
+  initial: Project[]; initialLibrary: Library; loadLibrary: () => Promise<Library>
+  window: TimelineWindow; onWindowChange: (next: TimelineWindow) => void
+  onClose: () => void; onApply: (plans: Project[]) => void; reviewNote?: string
+}) {
   const [before] = useState(() => structuredClone(initial))
   const [draft, setDraft] = useState(before), [history, setHistory] = useState<Project[][]>([])
   const [selection, setSelection] = useState(() => defaultSelection(before[0]))
@@ -36,7 +52,7 @@ export function AdjustmentDialog({ initial, saved, window, onWindowChange, onClo
   const [allowAnchor, setAllowAnchor] = useState(false), [reviewing, setReviewing] = useState(false)
   const [amount, setAmount] = useState('4'), [direction, setDirection] = useState(-1), [error, setError] = useState(''), [message, setMessage] = useState('')
   const [discard, setDiscard] = useState(false), [busy, setBusy] = useState(false)
-  const [library, setLibrary] = useState(workspace.library)
+  const [library, setLibrary] = useState(initialLibrary)
   const [reviewRevision, setReviewRevision] = useState<number | null>(null)
   const lock = useRef(false), content = useRef<HTMLDivElement>(null), datesHeading = useRef<HTMLHeadingElement>(null)
   const changes = dateChanges(before, draft), dirty = changes.length > 0
@@ -52,17 +68,12 @@ export function AdjustmentDialog({ initial, saved, window, onWindowChange, onClo
     if (reviewing) node?.scrollIntoView({ block: 'start' })
     else content.current?.closest('dialog')?.querySelector<HTMLElement>('header h2')?.focus({ preventScroll: true })
   }, [reviewing])
-  async function latest() {
-    const [nextLibrary, record] = await Promise.all([localData.getLibrary(workspace.id), saved ? localData.getPipeline(workspace.id, saved.id) : Promise.resolve(null)])
-    if (saved && (!record || record.revision !== saved.revision)) throw new Error('This saved pipeline plan changed in another tab. Your adjustments are still here. Close this adjustment and reopen the latest saved plan before applying changes.')
-    return nextLibrary
-  }
   async function reviewOrApply(apply: boolean) {
     if (lock.current) return
     lock.current = true; setBusy(true); setError(''); closeTimelineDetails()
     try {
-      const nextLibrary = await latest()
-      setLibrary(nextLibrary); workspace.acceptLibrary(nextLibrary)
+      const nextLibrary = await loadLibrary()
+      setLibrary(nextLibrary)
       if (apply && nextLibrary.revision !== reviewRevision) {
         setReviewing(false); setReviewRevision(null)
         setError('The Library changed. Clash checks have been refreshed. Review the changes again before applying your adjustments.'); return
@@ -119,7 +130,7 @@ export function AdjustmentDialog({ initial, saved, window, onWindowChange, onClo
           {reviewing && <AdjustmentDates before={before} after={draft} headingRef={datesHeading} />}
         </div>
         <aside className="adjustment-controls" aria-label={reviewing ? 'Adjustment review' : 'Adjustment controls'}>
-          {reviewing ? <><h3>Review changes</h3><p>{new Set(changes.map(change => change.planId)).size} {new Set(changes.map(change => change.planId)).size === 1 ? 'procurement has' : 'procurements have'} changed. The table shows changed dates, phase durations, anchors and adjustment gaps.</p><p className="info-box">This applies adjustments to the open pipeline plan. Use Save in the editing window to update the named plan, or Save as to keep a separate alternative.</p><button className="button" onClick={() => setReviewing(false)}>Back to adjusting</button></> : <>
+          {reviewing ? <><h3>Review changes</h3><p>{new Set(changes.map(change => change.planId)).size} {new Set(changes.map(change => change.planId)).size === 1 ? 'procurement has' : 'procurements have'} changed. The table shows changed dates, phase durations, anchors and adjustment gaps.</p><p className="info-box">{reviewNote}</p><button className="button" onClick={() => setReviewing(false)}>Back to adjusting</button></> : <>
             <h3>Choose what to adjust</h3><label className="field-label">Procurement<select value={plan.id} onChange={event => { const next = draft.find(plan => plan.id === event.target.value)!; select(defaultSelection(next)); setMode(next.phases.some(phase => phase.kind === 'phase') ? 'range' : 'whole') }}>{draft.map(plan => <option key={plan.id} value={plan.id}>{plan.name}</option>)}</select></label>
             <fieldset className="mode-choice"><legend>Selection</legend>{([['whole', 'Whole procurement'], ['phase', 'One phase'], ['range', 'Phase range']] as const).map(([value, label]) => <label key={value}><input type="radio" name="adjustment-mode" checked={mode === value} disabled={value !== 'whole' && !hasPhases} onChange={() => changeMode(value)} />{label}</label>)}</fieldset>
             {!hasPhases && <p className="help">This procurement contains milestones only. Select the whole procurement to move it.</p>}

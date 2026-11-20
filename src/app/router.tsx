@@ -38,6 +38,7 @@ export const router = createRouter([{
   HydrateFallback: Loading,
   children: [
     { index: true, loader: () => redirect('/workspaces'), element: <Loading /> },
+    { path: 'discover', lazy: async () => ({ Component: (await import('../features/discover/discover.tsx')).Discover }) },
     { path: 'workspaces', action: createWorkspace, Component: Workspaces },
     {
       id: 'workspace',

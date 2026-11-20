@@ -14,12 +14,14 @@ export type TimelineInteraction = {
   overlay: (plan: Plan, frame: { start: number; end: number }, pixelsPerWeek: number) => ReactNode
 }
 
-export function Timeline({ plans, rules, onSelect, getHref, viewing = false, page = false, actions, example = false, extent, windowState, onWindowChange, hideControls = false, hideFooter = false, interaction, labelWidths }: {
+export function Timeline({ plans, rules, onSelect, getHref, viewing = false, page = false, actions, example = false, extent, windowState, onWindowChange, hideControls = false, hideFooter = false, interaction, highlight, visiblePlanIds, labelWidths }: {
   plans: Plan[]; rules: OverlapRule[]; onSelect?: (id: string) => void; getHref?: (id: string) => string
   viewing?: boolean; page?: boolean; actions?: ReactNode; example?: boolean
   extent?: { first: number; last: number }; windowState?: { start: number; months: number | 'all' }; onWindowChange?: (window: { start: number; months: number | 'all' }) => void
   hideControls?: boolean; hideFooter?: boolean
   interaction?: TimelineInteraction
+  highlight?: Selection
+  visiblePlanIds?: string[]
   labelWidths?: { wide: number; narrow: number; breakpoint: number }
 }) {
   const [today] = useState(() => monday(Date.now()))
@@ -69,15 +71,15 @@ export function Timeline({ plans, rules, onSelect, getHref, viewing = false, pag
   </div>
   return <section className={`planning-timeline${page ? ' pipeline-timeline' : ''}${example ? ' example-timeline' : ''}`} aria-label={example ? 'Example pipeline plan' : 'Pipeline Plan timeline'}>
     {page || example ? <div className="pipeline-toolbar"><h2>{example ? 'Example pipeline plan' : 'Pipeline Plan timeline'}</h2><div className="pipeline-toolbar-actions">{controls}{actions}</div></div> : controls}
-    <div className="timeline-scroll" ref={scroll} tabIndex={0} role="region" aria-label="Scrollable procurement pipeline plan" aria-describedby={helpId} onScroll={event => { if (!full) setDisplayedStart(start + Math.round(event.currentTarget.scrollLeft / perDay) * DAY) }}>
+    <div className="timeline-scroll" ref={scroll} tabIndex={0} role="region" aria-label="Scrollable procurement pipeline plan" aria-describedby={hideFooter ? undefined : helpId} onScroll={event => { if (!full) setDisplayedStart(start + Math.round(event.currentTarget.scrollLeft / perDay) * DAY) }}>
       <div className="timeline-canvas" style={{ width: label + trackWidth, '--timeline-label': `${label}px`, '--timeline-week': `${perDay * 7}px` } as CSSProperties}>
         <div className="timeline-row ruler-row"><div className="timeline-label">Procurement</div><div className="timeline-track ruler">
           {ticks.map(time => <span className="timeline-tick" key={time} style={{ left: `${(time - start) / DAY * perDay}px` }}>{new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(time)}</span>)}
         </div></div>
-        {plans.map(plan => <div className={`timeline-row${interaction?.selection.planId === plan.id ? ' selected-row' : ''}`} key={plan.id}>
+        {plans.filter(plan => !visiblePlanIds || visiblePlanIds.includes(plan.id)).map(plan => <div className={`timeline-row${interaction?.selection.planId === plan.id ? ' selected-row' : ''}`} key={plan.id}>
           <div className="timeline-label">{onSelect ? getHref ? <ProcurementLink id={plan.id} name={plan.name} href={getHref(plan.id)} onSelect={onSelect} viewing={viewing} /> : <button className="text-button" onClick={() => onSelect(plan.id)}>{plan.name}</button> : <strong>{plan.name}</strong>}<small className="timeline-anchor-label"><span className="timeline-anchor-icon" role="img" aria-label="Anchor milestone" title="Anchor milestone">⚓︎</span>{plan.anchorName}: {formatDate(plan.anchor)}</small></div>
           <div className="timeline-track"><PhaseSegments plan={plan} frame={{ start, end }} clashes={findings} sharedTooltips bindDetails={bindTimelineDetails}
-            range={interaction?.selection.planId === plan.id ? interaction.selection : undefined} faded={interaction?.moving}
+            range={interaction?.selection.planId === plan.id ? interaction.selection : highlight?.planId === plan.id ? highlight : undefined} faded={interaction?.moving}
             onPick={interaction ? index => interaction.onPick({ planId: plan.id, first: index, last: index }) : undefined} />
             {interaction?.overlay(plan, { start, end }, perDay * 7)}
           </div>
